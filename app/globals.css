@@ -1,0 +1,511 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css");
+
+/* ============================================================
+ *  Theme tokens — CSS variables drive BOTH palettes.
+ *  Dark is default; .light overrides on <html>.
+ * ============================================================ */
+:root,
+.dark {
+  --app-bg:       #05060a;
+  --panel-bg:     #0d1017;
+  --drawer-bg:    #0a0c12;
+  --surface:      rgba(255, 255, 255, 0.03);
+  --surface-hi:   rgba(255, 255, 255, 0.07);
+  --surface-2:    rgba(255, 255, 255, 0.045);
+  --border:       rgba(255, 255, 255, 0.09);
+  --border-hi:    rgba(255, 255, 255, 0.22);
+  --text:         #e6edf3;
+  --text-mid:     #9ba4b3;
+  --text-dim:     #5b6372;
+
+  --accent-cyan:  #22e4ff;
+  --accent-pink:  #ff2d94;
+  --accent-lime:  #b7ff4a;
+  --accent-amber: #ffb547;
+
+  --gh-bg:        #0d1117;
+  --gh-fg:        #e6edf3;
+  --gh-border:    #30363d;
+  --gh-code-bg:   #161b22;
+
+  --shadow-card:  0 20px 60px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+.light {
+  --app-bg:       #f6f7f9;
+  --panel-bg:     #ffffff;
+  --drawer-bg:    #ffffff;
+  --surface:      rgba(15, 23, 42, 0.035);
+  --surface-hi:   rgba(15, 23, 42, 0.075);
+  --surface-2:    rgba(15, 23, 42, 0.025);
+  --border:       rgba(15, 23, 42, 0.13);
+  --border-hi:    rgba(15, 23, 42, 0.28);
+  --text:         #1f2328;
+  --text-mid:     #57606a;
+  --text-dim:     #848e99;
+
+  /* Dimmed & desaturated accents so light mode reads professional */
+  --accent-cyan:  #0b8fa8;
+  --accent-pink:  #c2185b;
+  --accent-lime:  #3c8a0f;
+  --accent-amber: #b76a00;
+
+  --gh-bg:        #ffffff;
+  --gh-fg:        #1f2328;
+  --gh-border:    #d0d7de;
+  --gh-code-bg:   #f6f8fa;
+
+  --shadow-card:  0 16px 40px rgba(15, 23, 42, 0.08);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  padding: 0;
+  margin: 0;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background: var(--app-bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+  /* Smooth scrolling app-wide; honored by anchor navigation + programmatic scrolls */
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  body {
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, color-mix(in srgb, var(--accent-pink) 7%, transparent), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, color-mix(in srgb, var(--accent-cyan) 8%, transparent), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+    opacity: 0.35;
+    z-index: 0;
+  }
+  .light body::before { opacity: 0.55; }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent-cyan) 35%, transparent);
+    color: var(--text);
+  }
+
+  /* Scrollbars — themed to accent cyan with quiet hover */
+  ::-webkit-scrollbar      { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{
+    background: color-mix(in srgb, var(--accent-cyan) 20%, transparent);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 150ms;
+  }
+  ::-webkit-scrollbar-thumb:hover{
+    background: color-mix(in srgb, var(--accent-cyan) 50%, transparent);
+    background-clip: padding-box;
+  }
+  * { scrollbar-color: color-mix(in srgb, var(--accent-cyan) 35%, transparent) transparent; scrollbar-width: thin; }
+
+  .toolbar-scroll::-webkit-scrollbar { height: 4px; }
+
+  /* Respect reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    html, body { scroll-behavior: auto; }
+  }
+}
+
+/* ============================================================
+ *  Components — built on @apply so they keep Tailwind's reset
+ *  and normal cascade behavior.
+ * ============================================================ */
+@layer components {
+
+  .glass {
+    background: var(--surface);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--border);
+  }
+
+  .drawer-solid {
+    background: var(--drawer-bg);
+    border: 1px solid var(--border);
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.35), inset 1px 0 0 var(--border);
+  }
+  .light .drawer-solid {
+    box-shadow: -14px 0 40px rgba(15, 23, 42, 0.08), inset 1px 0 0 var(--border);
+  }
+
+  .panel-solid {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+  }
+
+  /* ---------- Button system — fixed pill, 32px tall, never wraps ---------- */
+  .btn-base {
+    @apply inline-flex items-center gap-1.5 h-8 px-2.5 rounded-lg
+           text-[11px] font-medium leading-none select-none
+           whitespace-nowrap shrink-0
+           transition-all duration-150;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+  }
+  .btn-base:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-ghost {
+    @apply btn-base;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-mid);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--surface-hi);
+    border-color: var(--border-hi);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+  .btn-ghost:active:not(:disabled) { transform: translateY(0); }
+
+  .btn-neon-cyan {
+    @apply btn-base;
+    color: var(--accent-cyan);
+    border: 1px solid color-mix(in srgb, var(--accent-cyan) 45%, transparent);
+    background: color-mix(in srgb, var(--accent-cyan) 9%, transparent);
+  }
+  .btn-neon-cyan:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--accent-cyan) 16%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent-cyan) 28%, transparent);
+    transform: translateY(-1px);
+  }
+  .btn-neon-cyan:active:not(:disabled) { transform: translateY(0); }
+
+  .btn-neon-pink {
+    @apply btn-base;
+    color: var(--accent-pink);
+    border: 1px solid color-mix(in srgb, var(--accent-pink) 45%, transparent);
+    background: color-mix(in srgb, var(--accent-pink) 9%, transparent);
+  }
+  .btn-neon-pink:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--accent-pink) 16%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent-pink) 28%, transparent);
+    transform: translateY(-1px);
+  }
+  .btn-neon-pink:active:not(:disabled) { transform: translateY(0); }
+
+  .btn-danger {
+    @apply btn-base;
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.08);
+  }
+  .btn-danger:hover:not(:disabled) { background: rgba(239, 68, 68, 0.16); }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded px-1.5 py-0.5
+           text-[9px] uppercase tracking-wider whitespace-nowrap;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .input-base {
+    @apply w-full rounded-lg px-3 py-2 text-sm transition-all;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .input-base::placeholder { color: var(--text-dim); }
+  .input-base:focus {
+    outline: none;
+    border-color: color-mix(in srgb, var(--accent-cyan) 60%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-cyan) 18%, transparent);
+  }
+
+  /* 3D frame — gradient border overlay for the editor/preview panes */
+  .frame-3d {
+    position: relative;
+    border-radius: 16px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .frame-3d::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent-pink) 28%, transparent),
+      transparent 40%,
+      transparent 60%,
+      color-mix(in srgb, var(--accent-cyan) 28%, transparent)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .light .frame-3d::before { opacity: 0.3; }
+
+  /* Neon text echoes */
+  .neon-text-pink { color: var(--accent-pink); }
+  .neon-text-cyan { color: var(--accent-cyan); }
+  .dark .neon-text-pink { text-shadow: 0 0 10px color-mix(in srgb, var(--accent-pink) 50%, transparent); }
+  .dark .neon-text-cyan { text-shadow: 0 0 10px color-mix(in srgb, var(--accent-cyan) 50%, transparent); }
+
+  /* Scroll-shadow helper for the toolbar — subtle fade at edges */
+  .scroll-fade-x {
+    mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+  }
+}
+
+/* ============================================================
+ *  Diff viewer
+ * ============================================================ */
+.diff-added {
+  background-color: color-mix(in srgb, #3fb950 14%, transparent);
+  border-left: 3px solid #3fb950;
+  padding-left: 6px;
+}
+.diff-removed {
+  background-color: color-mix(in srgb, #f85149 12%, transparent);
+  border-left: 3px solid #f85149;
+  padding-left: 6px;
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+/* ============================================================
+ *  Mermaid / KaTeX
+ * ============================================================ */
+.mermaid-container {
+  display: flex;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5em 0; }
+
+/* ============================================================
+ *  Prose — GitHub-parity in both modes
+ * ============================================================ */
+.prose-github {
+  color: var(--gh-fg);
+  max-width: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.prose-github h1, .prose-github h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--gh-border);
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+.prose-github h1 { font-size: 2em; }
+.prose-github h2 { font-size: 1.5em; }
+.prose-github h3 { font-size: 1.25em; font-weight: 600; }
+.prose-github h4 { font-size: 1em; font-weight: 600; }
+.prose-github a { color: #2f81f7; text-decoration: none; }
+.light .prose-github a { color: #0969da; }
+.prose-github a:hover { text-decoration: underline; }
+.prose-github hr { height: 0.25em; padding: 0; margin: 24px 0; background: var(--gh-border); border: 0; }
+.prose-github blockquote {
+  border-left: 0.25em solid var(--gh-border);
+  color: var(--text-mid);
+  padding: 0 1em;
+  margin: 0 0 16px 0;
+}
+.prose-github pre {
+  background: var(--gh-code-bg) !important;
+  border: 1px solid var(--gh-border);
+  padding: 16px;
+  border-radius: 6px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  margin: 16px 0;
+}
+.prose-github pre code { background: transparent; padding: 0; font-size: 100%; color: var(--gh-fg); }
+.prose-github pre code span { background: transparent !important; }
+.prose-github :not(pre) > code {
+  background: color-mix(in srgb, var(--text-mid) 30%, transparent) !important;
+  color: var(--gh-fg) !important;
+  padding: 0.15em 0.4em !important;
+  border-radius: 4px !important;
+  font-size: 85% !important;
+  white-space: break-spaces;
+}
+.prose-github table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+.prose-github table th, .prose-github table td {
+  padding: 6px 13px;
+  border: 1px solid var(--gh-border);
+}
+.prose-github table th { font-weight: 600; }
+.prose-github table tr:nth-child(2n) {
+  background-color: color-mix(in srgb, var(--text-mid) 8%, transparent);
+}
+.prose-github p { margin: 0 0 16px 0; }
+.prose-github ul, .prose-github ol { padding-left: 2em; margin: 0 0 16px 0; }
+.prose-github li { margin: 0.25em 0; }
+.prose-github input[type="checkbox"] {
+  margin: 0 0.2em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+/* CRITICAL: badges inline side-by-side inside align-center blocks */
+.prose-github img { display: inline-block; vertical-align: middle; max-width: 100%; }
+.prose-github picture,
+.prose-github p picture,
+.prose-github div picture {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+}
+.prose-github picture img,
+.prose-github p img,
+.prose-github a img,
+.prose-github div[align] img,
+.prose-github p[align] img {
+  display: inline-block !important;
+  vertical-align: middle;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.prose-github p[align="center"],
+.prose-github div[align="center"] > p {
+  display: block;
+  text-align: center;
+  line-height: 1.8;
+}
+.prose-github p[align="center"] br { display: none; }
+.prose-github p[align="center"] {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Focus-mode editor overlay */
+.focus-fade .md-focus-faded {
+  opacity: 0.22 !important;
+  transition: opacity 200ms ease;
+}
+
+/* Command palette overlay */
+.command-palette-backdrop {
+  background: rgba(5, 6, 10, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.light .command-palette-backdrop {
+  background: rgba(15, 23, 42, 0.28);
+}
+
+/* Screenreader-only utility */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+ *  Light-mode compatibility layer.
+ *
+ *  Many drawer components were originally written against hardcoded
+ *  dark-palette Tailwind classes (text-slate-*, bg-ink-*, bg-white/*
+ *  alpha overlays). Retrofitting each class site would churn the tree;
+ *  instead we REMAP those tokens to theme-var-based colors when the
+ *  .light class is on <html>. This keeps component code readable and
+ *  ensures both themes render correctly.
+ *
+ *  Dark mode is unchanged — Tailwind's original utilities still apply.
+ * ============================================================ */
+.light .text-slate-100 { color: var(--text) !important; }
+.light .text-slate-200 { color: var(--text) !important; }
+.light .text-slate-300 { color: var(--text) !important; }
+.light .text-slate-400 { color: var(--text-mid) !important; }
+.light .text-slate-500 { color: var(--text-mid) !important; }
+.light .text-slate-600 { color: var(--text-dim) !important; }
+
+.light .bg-ink-900\/50,
+.light .bg-ink-900\/60,
+.light .bg-ink-900\/70,
+.light .bg-ink-900\/80,
+.light .bg-ink-900\/90 { background-color: var(--surface) !important; }
+
+.light .bg-ink-950\/40,
+.light .bg-ink-950\/50,
+.light .bg-ink-950\/60,
+.light .bg-ink-950\/70,
+.light .bg-ink-950\/80,
+.light .bg-ink-950\/90 { background-color: var(--surface-2) !important; }
+
+.light .bg-white\/\[0\.02\],
+.light .bg-white\/\[0\.025\],
+.light .bg-white\/\[0\.03\],
+.light .bg-white\/\[0\.05\] { background-color: var(--surface) !important; }
+
+.light .bg-white\/\[0\.06\],
+.light .bg-white\/\[0\.07\],
+.light .bg-white\/\[0\.1\] { background-color: var(--surface-hi) !important; }
+
+.light .border-white\/5,
+.light .border-white\/10,
+.light .border-white\/\[0\.06\],
+.light .border-white\/\[0\.08\] { border-color: var(--border) !important; }
+
+.light .border-white\/20,
+.light .border-white\/30 { border-color: var(--border-hi) !important; }
+
+.light .hover\:bg-white\/\[0\.06\]:hover,
+.light .hover\:bg-white\/\[0\.07\]:hover,
+.light .hover\:bg-white\/10:hover { background-color: var(--surface-hi) !important; }
+
+.light .hover\:border-white\/20:hover { border-color: var(--border-hi) !important; }
+
+/* Also make the monaco background inherit theme */
+.light .monaco-editor,
+.light .monaco-editor-background,
+.light .monaco-editor .margin {
+  background-color: var(--panel-bg) !important;
+}
