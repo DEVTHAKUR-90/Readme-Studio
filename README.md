@@ -29,7 +29,7 @@ a command palette, and an export that makes your README look good on Twitter.
 
 <br />
 
-**[Live demo](#) · [Getting started](#-getting-started) · [Deploy to Vercel](#-deploy-to-vercel) · [Contributing](#-contributing)**
+**[Live demo](https://readme-studio-kappa.vercel.app/) · [Getting started](#-getting-started) · [Deploy to Vercel](#-deploy-to-vercel) · [Contributing](#-contributing)**
 
 </div>
 
@@ -123,7 +123,7 @@ Press `⌘K` anywhere. Every action in the app is fuzzy-searchable — save, tog
 ## 🚀 Getting started
 
 ```bash
-git clone https://github.com/<you>/readme-studio
+git clone https://github.com/<DEVTHAKUR-90>/readme-studio
 cd readme-studio
 npm install
 npm run dev
