@@ -10,7 +10,8 @@
 ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚══════╝    ╚══════╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝ 
                                                                                                      
 
-### The README tool I actually wanted to exist.
+The README tool I actually wanted to exist.
+  
 </pre>
 
 A hyper-versatile, 100% client-side README & Markdown studio for developers.
