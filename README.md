@@ -10,9 +10,8 @@
 ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚══════╝    ╚══════╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝ 
                                                                                                      
 ```
-</pre>
-
 ### The README tool I actually wanted to exist.
+</pre>
 
 A hyper-versatile, 100% client-side README & Markdown studio for developers.
 GitHub-parity preview, 3,300+ searchable tech badges, DevSecOps scanning,
